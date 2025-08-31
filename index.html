@@ -26,15 +26,21 @@
     <section class="content">
         <h1>Pokedex</h1>
 
+        <select name="" id="typeFilter">
+            <option value="">Todos</option>
+            <option value="grass">Grama</option>
+            <option value="fire">Fogo</option>
+            <option value="water">Água</option>
+            <option value="normal">Normal</option>
+            <option value="bug">Inseto</option>
+            <option value="poison">Veneno</option>
+            <option value="electric">Elétrico</option>
+        </select>
+
         <ol id="pokemonList" class="pokemons">
             <!-- ..... Pokemons here ..... -->
         </ol>
 
-        <div class="pagination">
-            <button id="loadMoreButton" type="button">
-                Load More
-            </button>
-        </div>
     </section>
 
     <!-- Nosso JS -->

@@ -1,9 +1,8 @@
 const pokemonList = document.getElementById('pokemonList')
-const loadMoreButton = document.getElementById('loadMoreButton')
+const typeFilter =document.getElementById('typeFilter')
 
 const maxRecords = 151
-const limit = 10
-let offset = 0;
+let totalPokemons = [];
 
 function convertPokemonToLi(pokemon) {
     return `
@@ -13,7 +12,7 @@ function convertPokemonToLi(pokemon) {
 
             <div class="detail">
                 <ol class="types">
-                    ${pokemon.types.map((type) => `<li class="type ${type}">${type}</li>`).join('')}
+                    ${pokemon.types.map(t => `<li class="type ${t}">${t}</li>`).join('')}
                 </ol>
 
                 <img src="${pokemon.photo}"
@@ -23,25 +22,30 @@ function convertPokemonToLi(pokemon) {
     `
 }
 
-function loadPokemonItens(offset, limit) {
-    pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
-        const newHtml = pokemons.map(convertPokemonToLi).join('')
-        pokemonList.innerHTML += newHtml
-    })
+function renderPokemons(pokemons) {
+    const newHtml = pokemons.map(convertPokemonToLi).join('');
+    pokemonList.innerHTML = newHtml;
 }
 
-loadPokemonItens(offset, limit)
+function loadAllPokemons() {
+    pokeApi.getPokemons(0, maxRecords).then(pokemons => {
+        totalPokemons = pokemons;
+        renderPokemons(totalPokemons);
+    });
+}
 
-loadMoreButton.addEventListener('click', () => {
-    offset += limit
-    const qtdRecordsWithNexPage = offset + limit
+typeFilter.addEventListener('change', () => {
+    const selectedType = typeFilter.value;
 
-    if (qtdRecordsWithNexPage >= maxRecords) {
-        const newLimit = maxRecords - offset
-        loadPokemonItens(offset, newLimit)
-
-        loadMoreButton.parentElement.removeChild(loadMoreButton)
+    if (selectedType === "") {
+        renderPokemons(totalPokemons);
     } else {
-        loadPokemonItens(offset, limit)
+        const filtered = totalPokemons.filter(pokemon =>
+            pokemon.types.includes(selectedType)
+        );
+        renderPokemons(filtered);
     }
-})
+});
+
+loadAllPokemons();
+
